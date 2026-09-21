@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breakfast Box | Siliguri</title>
+<style>
+  :root{--green:#14532d;--light:#f7f4e8;--yellow:#f4c542;--cream:#fffdf7;--text:#263126;--muted:#6b756b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#fffaf0,#f4f7ed);color:var(--text)}
+  .wrap{max-width:900px;margin:auto;padding:18px}
+  header{background:var(--green);color:#fff;border-radius:24px;padding:28px 22px;text-align:center;box-shadow:0 8px 25px #0001}
+  header h1{margin:0;font-size:42px;letter-spacing:-1px}
+  header p{margin:8px 0 0;font-size:18px}
+  .badge{display:inline-block;background:var(--yellow);color:#17351f;padding:7px 14px;border-radius:30px;font-weight:700;margin-top:14px}
+  .section{margin-top:20px}
+  h2{color:var(--green);margin:0 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .item{background:var(--cream);border:1px solid #e7e5d8;border-radius:18px;padding:12px;box-shadow:0 4px 14px #0000000a;overflow:hidden}
+  .food-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:13px;display:block;margin-bottom:10px}
+  .item strong{display:block;font-size:17px}
+  .price{font-weight:800;color:var(--green);margin-top:6px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+  input[type=number]{width:72px;padding:9px;border:1px solid #ccd2c8;border-radius:10px;font-size:16px}
+  .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 5px 20px #00000010;margin-top:20px}
+  label{display:block;font-weight:700;margin:12px 0 6px}
+  input,textarea,select{width:100%;padding:12px;border:1px solid #ccd2c8;border-radius:12px;font-size:16px;background:#fff}
+  textarea{min-height:90px;resize:vertical}
+  .total{font-size:24px;font-weight:800;color:var(--green);display:flex;justify-content:space-between;margin:16px 0}
+  button{width:100%;border:0;border-radius:14px;padding:15px;font-size:18px;font-weight:800;cursor:pointer}
+  .wa{background:#25D366;color:#fff}
+  .note{font-size:13px;color:var(--muted);line-height:1.5}
+  .empty{padding:14px;background:#f8f8f2;border-radius:12px;color:var(--muted)}
+  footer{text-align:center;padding:25px;color:var(--muted);font-size:13px}
+  @media(max-width:650px){.grid{grid-template-columns:1fr}header h1{font-size:34px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div style="font-size:42px">🥣</div>
+    <h1>Breakfast Box</h1>
+    <p>A Better Way to Begin.</p>
+    <div class="badge">PURE VEGETARIAN • PRE-ORDER ONLY</div>
+    <p style="margin-top:14px">Fresh homemade breakfast delivered in Siliguri.</p>
+  </header>
+
+  <div class="section">
+    <h2>Classics</h2>
+    <div class="grid" id="classics"></div>
+  </div>
+
+  <div class="section">
+    <h2>Breakfast Signatures</h2>
+    <div class="grid" id="signatures"></div>
+  </div>
+
+  <div class="section">
+    <h2>Add-ons</h2>
+    <div class="grid" id="addons"></div>
+  </div>
+
+  <div class="card">
+    <h2>Your Order</h2>
+    <div id="cart" class="empty">Select items above to add them to your order.</div>
+    <div class="total"><span>Total</span><span id="total">₹0</span></div>
+
+    <label for="name">Your Name *</label>
+    <input id="name" placeholder="Enter your name">
+
+    <label for="phone">Mobile Number *</label>
+    <input id="phone" inputmode="numeric" placeholder="10-digit mobile number">
+
+    <label for="address">Delivery Address *</label>
+    <textarea id="address" placeholder="House / Flat, Road, Area, Siliguri"></textarea>
+
+    <label for="date">Preferred Delivery Date *</label>
+    <input id="date" type="date">
+
+    <label for="time">Preferred Delivery Time *</label>
+    <select id="time">
+      <option value="">Select a time</option>
+      <option>7:00 AM - 8:00 AM</option>
+      <option>8:00 AM - 9:00 AM</option>
+      <option>9:00 AM - 10:00 AM</option>
+      <option>10:00 AM - 11:00 AM</option>
+      <option>11:00 AM - 12:00 PM</option>
+    </select>
+
+    <label for="notes">Special Instructions (optional)</label>
+    <textarea id="notes" placeholder="Less spicy, no onion, landmark, etc."></textarea>
+
+    <p class="note">By tapping the button, WhatsApp will open with your order details already filled in. Please press <b>Send</b> in WhatsApp to submit the order.</p>
+    <button class="wa" onclick="sendOrder()">🟢 Place Pre-Order on WhatsApp</button>
+  </div>
+
+  <footer>Breakfast Box • Pure Vegetarian Breakfast • Siliguri<br>Pre-order only</footer>
+</div>
+
+<script>
+const menu = {
+  classics: [
+    ["Puri-Sabji",99,"puri-sabji.jpg"],
+    ["6 Puri-Sabji",129,"puri-sabji-6.jpg"],
+    ["2 Plain Paratha + Sabji",99,"plain-paratha-sabji.jpg"],
+    ["2 Aloo Paratha + Sabji",129,"aloo-paratha-sabji.jpg"],
+    ["2 Paneer Paratha + Sabji",159,"paneer-paratha-sabji.jpg"]
+  ],
+  signatures: [
+    ["Puri Breakfast Box",139,"puri-breakfast-box.jpg"],
+    ["Aloo Paratha Breakfast Box",149,"aloo-paratha-breakfast-box.jpg"],
+    ["Family Breakfast",299,"family-breakfast.jpg"]
+  ],
+  addons: [
+    ["Extra Sabji",35,"extra-sabji.jpg"],
+    ["Curd",30,"curd.jpg"],
+    ["Extra Paratha",50,"extra-paratha.jpg"],
+    ["Chutney/Pickle (3)",15,"chutney-pickle.jpg"]
+  ]
+};
+const cart = {};
+
+function render(sectionId, items){
+  const el = document.getElementById(sectionId);
+  el.innerHTML = items.map(([name,price,img],i)=>{
+    const id = sectionId+"_"+i;
+    return `<div class="item">
+      <img class="food-img" src="images/${img}" alt="${name}" loading="lazy">
+      <strong>${name}</strong>
+      <div class="price">₹${price}</div>
+      <div class="row">
+        <span>Quantity</span>
+        <input type="number" min="0" value="0" id="${id}" onchange="setQty('${name.replace(/'/g,"\\'")}',${price},this.value)">
+      </div>
+    </div>`;
+  }).join("");
+}
+function setQty(name,price,qty){
+  qty=parseInt(qty||0);
+  if(qty>0) cart[name]={price,qty}; else delete cart[name];
+  updateCart();
+}
+function updateCart(){
+  const el=document.getElementById("cart");
+  const entries=Object.entries(cart);
+  if(!entries.length){el.className="empty";el.innerHTML="Select items above to add them to your order."}
+  else{
+    el.className="";
+    el.innerHTML=entries.map(([n,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #eee"><span>${v.qty} × ${n}</span><b>₹${v.qty*v.price}</b></div>`).join("");
+  }
+  document.getElementById("total").textContent="₹"+entries.reduce((s,[,v])=>s+v.qty*v.price,0);
+}
+function sendOrder(){
+  const entries=Object.entries(cart);
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const address=document.getElementById("address").value.trim();
+  const date=document.getElementById("date").value;
+  const time=document.getElementById("time").value;
+  const notes=document.getElementById("notes").value.trim();
+  if(!entries.length) return alert("Please select at least one item.");
+  if(!name||!phone||!address||!date||!time) return alert("Please fill all required customer and delivery details.");
+  if(!/^[0-9]{10}$/.test(phone)) return alert("Please enter a valid 10-digit mobile number.");
+  const total=entries.reduce((s,[,v])=>s+v.qty*v.price,0);
+  const lines=entries.map(([n,v])=>`${v.qty} × ${n} — ₹${v.qty*v.price}`).join("\n");
+  const msg=`🍳 BREAKFAST BOX — NEW PRE-ORDER
+
+Name: ${name}
+Mobile: ${phone}
+
+ORDER:
+${lines}
+
+TOTAL: ₹${total}
+
+Delivery Area: Siliguri
+Delivery Date: ${date}
+Preferred Time: ${time}
+Address: ${address}${notes ? `\nSpecial Instructions: ${notes}` : ""}
+
+Please confirm my order.`;
+  const url="https://wa.me/919975874071?text="+encodeURIComponent(msg);
+  window.open(url,"_blank");
+}
+render("classics",menu.classics);
+render("signatures",menu.signatures);
+render("addons",menu.addons);
+document.getElementById("date").min=new Date().toISOString().split("T")[0];
+</script>
+</body>
+</html>
